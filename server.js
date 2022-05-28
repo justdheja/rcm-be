@@ -1,33 +1,22 @@
-import express from 'express';
-import 'babel-polyfill';
-import cors from 'cors';
-import env from './env';
-import usersRoute from './app/routes/usersRoute';
-import seedRoute from './app/routes/seedRoute';
-import adminRoute from './app/routes/adminRoute';
-import tripRoute from './app/routes/tripRoute';
-import busRoute from './app/routes/busRoute';
-import bookingRoute from './app/routes/bookingRoute';
-
+const express = require('express');
 const app = express();
+require('dotenv').config();
 
-// Add middleware for parsing URL encoded bodies (which are usually sent by browser)
-app.use(cors());
-// Add middleware for parsing JSON and urlencoded data and populating `req.body`
-app.use(express.urlencoded({ extended: false }));
+const PORT = process.env.PORT || 4000;
+
 app.use(express.json());
+app.use(express.urlencoded({extended: false}));
 
-app.use('/api/v1', usersRoute);
-app.use('/api/v1', seedRoute);
-app.use('/api/v1', adminRoute);
-app.use('/api/v1', tripRoute);
-app.use('/api/v1', busRoute);
-app.use('/api/v1', bookingRoute);
-
-
-app.listen(env.port).on('listening', () => {
-  console.log(`🚀 are live on ${env.port}`);
+// simple routes
+app.get("/", (req, res) => {
+  res.json({ message: "RCM APP." });
 });
 
+// routes
+require('./app/routes/auth.routes')(app);
+require('./app/routes/user.routes')(app);
 
-export default app;
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}.`);
+});
