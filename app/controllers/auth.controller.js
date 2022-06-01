@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const { pool } = require("../services/db.config");
+const { pool } = require('../services/db.config');
 require('dotenv').config();
 
 const ONEDAY = 86400;
@@ -82,6 +82,7 @@ exports.signin = (req, res) => {
           id: user.id,
           username: user.username,
           email: user.email,
+          personal_access_token: user.personal_access_token,
           accessToken: token
       });
     });
