@@ -2,7 +2,7 @@ const { pool } = require('../services/db.config');
 require('dotenv').config();
 
 exports.allAccess = (req, res) => {
-	res.status(200).send('Public Content.');
+	res.status(200).send('Welcome to RCM Services');
 };
 
 exports.userBoard = (req, res) => {
