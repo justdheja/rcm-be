@@ -6,42 +6,48 @@ require('dotenv').config();
 const ONEDAY = 86400;
 
 exports.signup = (req, res) => {
-  const lowerCaseUsername = req.body.username.toLowerCase();
-  const newUser = {
-    username: lowerCaseUsername,
-    email: req.body.email,
-    password: bcrypt.hashSync(req.body.password, 8)
-  };
-  const query = `
-  INSERT INTO users(username, email, password) 
-  VALUES($1,$2,$3) RETURNING *`;
-  const values = [newUser.username, newUser.email, newUser.password];
-  pool.connect((error, client, release) => {
-    if(error) {
-      return console.error('Error acquiring client', error.stack)
-    }
-    client.query(query, values, (err, result) => {
-      release();
-      if(err) {
-        console.log(err.message);
-        return res.status(400).json({err});
+  if (req.body.password.length >= 8) {
+    const lowerCaseUsername = req.body.username.toLowerCase();
+    const newUser = {
+      username: lowerCaseUsername,
+      email: req.body.email,
+      password: bcrypt.hashSync(req.body.password, 8)
+    };
+    const query = `
+    INSERT INTO users(username, email, password) 
+    VALUES($1,$2,$3) RETURNING *`;
+    const values = [newUser.username, newUser.email, newUser.password];
+    pool.connect((error, client, release) => {
+      if(error) {
+        return console.error('Error acquiring client', error.stack)
       }
-      const user = result.rows[0];
-      const token = jwt.sign(
-        { id: user.id }, 
-        process.env.SECRET, 
-        { expiresIn: ONEDAY }
-      );
-      return res.status(200).send({
-				id: user.id,
-				username: user.username,
-				email: user.email,
-				personal_access_token: user.personal_access_token,
-				access_token: token,
-				message: 'User was registered successfully!',
-			});
+      client.query(query, values, (err, result) => {
+        release();
+        if(err) {
+          console.log(err.message);
+          return res.status(400).json({err});
+        }
+        const user = result.rows[0];
+        const token = jwt.sign(
+          { id: user.id }, 
+          process.env.SECRET, 
+          { expiresIn: ONEDAY }
+        );
+        return res.status(200).send({
+          id: user.id,
+          username: user.username,
+          email: user.email,
+          personal_access_token: user.personal_access_token,
+          access_token: token,
+          message: 'User was registered successfully!',
+        });
+      });
     });
-  });
+  } else {
+    res.status(400).send({
+      error: 'Password must be 8 characters!'
+    })
+  }
 };
 
 exports.signin = (req, res) => {
