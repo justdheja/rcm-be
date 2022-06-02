@@ -36,7 +36,7 @@ exports.signup = (req, res) => {
         id: user.id,
         username: user.username,
         email: user.email,
-        accessToken: token,
+        access_token: token,
         message: "User was registered successfully!"
       });
     });
@@ -83,7 +83,7 @@ exports.signin = (req, res) => {
           username: user.username,
           email: user.email,
           personal_access_token: user.personal_access_token,
-          accessToken: token
+          access_token: token
       });
     });
   });
