@@ -33,12 +33,13 @@ exports.signup = (req, res) => {
         { expiresIn: ONEDAY }
       );
       return res.status(200).send({
-        id: user.id,
-        username: user.username,
-        email: user.email,
-        access_token: token,
-        message: "User was registered successfully!"
-      });
+				id: user.id,
+				username: user.username,
+				email: user.email,
+				personal_access_token: user.personal_access_token,
+				access_token: token,
+				message: 'User was registered successfully!',
+			});
     });
   });
 };
@@ -79,12 +80,13 @@ exports.signin = (req, res) => {
         expiresIn: ONEDAY
       });
       res.status(200).send({
-          id: user.id,
-          username: user.username,
-          email: user.email,
-          personal_access_token: user.personal_access_token,
-          access_token: token
-      });
+				id: user.id,
+				username: user.username,
+				email: user.email,
+				personal_access_token: user.personal_access_token,
+				access_token: token,
+				message: 'User was signed successfully!',
+			});
     });
   });
 };
