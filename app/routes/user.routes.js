@@ -23,4 +23,10 @@ module.exports = function (app) {
 		[verifyToken],
 		controller.addPesonalAccessToken
 	);
+
+	app.get(
+		'/api/user/delete',
+		[verifyToken],
+		controller.deleteAccount
+	);
 };

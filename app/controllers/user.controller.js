@@ -37,3 +37,27 @@ exports.addPesonalAccessToken = async (req, res) => {
 		});
 	});
 };
+
+exports.deleteAccount = (req, res) => {
+	const query = `DELETE FROM users WHERE id=$1 RETURNING *`;
+	const values = [req.user_id];
+	pool.connect((error, client, release) => {
+		if (error) {
+			return console.error('Error acquiring client', error.stack);
+		}
+		client.query(query, values, (err, result) => {
+			release();
+			if (err) {
+				console.log(err.message);
+				return res.status(400).json({ err });
+			}
+			const user = result.rows[0];
+			return res.status(200).send({
+				username: user.username,
+				email: user.email,
+				user_id: user.id,
+				message: `Account has been successfully deleted!`,
+			});
+		});
+	});
+}
