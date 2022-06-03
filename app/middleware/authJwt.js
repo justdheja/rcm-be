@@ -14,7 +14,7 @@ exports.verifyToken = (req, res, next) => {
   jwt.verify(bearerToken[1], process.env.SECRET, (err, decoded) => {
     if (err) {
       return res.status(401).send({
-        message: "Unauthorized!"
+        message: "You are unauthorized!"
       });
     }
     req.user_id = decoded.id;
