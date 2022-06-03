@@ -43,7 +43,7 @@ exports.signup = (req, res) => {
 		});
 	} else {
 		res.status(400).send({
-			message: 'Password must be 8 characters!',
+			message: 'Password must be at least 8 characters!',
 		});
 	}
 };
