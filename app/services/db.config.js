@@ -51,6 +51,29 @@ const createUserTable = () => {
 		});
 };
 
+const createMeetingTable = () => {
+	const meetingTable = `CREATE TABLE IF NOT EXISTS
+	meetings(
+		id SERIAL PRIMARY KEY,
+		user_id integer NOT NULL,
+		title VARCHAR (200) NOT NULL,
+		meeting_link text NOT NULL,
+		participants text[],
+		meeting_record text,
+		FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+	)`;
+	pool
+		.query(meetingTable)
+		.then((res) => {
+			console.log(res);
+			pool.end();
+		})
+		.catch((err) => {
+			console.log(err);
+			pool.end();
+		});
+};
+
 const dropUserTable = () => {
 	const usersDropQuery = 'DROP TABLE IF EXISTS users';
 	pool
@@ -79,6 +102,20 @@ const dropCompanyTable = () => {
 		});
 };
 
+const dropMeetingsTable = () => {
+	const query = 'DROP TABLE IF EXISTS meetings';
+	pool
+		.query(query)
+		.then((res) => {
+			console.log(res);
+			pool.end();
+		})
+		.catch((err) => {
+			console.log(err);
+			pool.end();
+		});
+}
+
 const createAllTable = async () => {
 	createUserTable();
 	createOrganizationsTable();
@@ -96,7 +133,7 @@ pool.on('remove', () => {
 module.exports = {
 	createAllTable,
 	dropAllTable,
-	pool
+	pool,
 };
 
 require('make-runnable');
