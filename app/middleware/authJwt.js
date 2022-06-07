@@ -3,7 +3,7 @@ require('dotenv').config();
 
 exports.verifyToken = (req, res, next) => {
   let token = req.headers["authorization"];
-  const bearerToken = token.split(' ')
+  const bearerToken = token?.split(' ')
 
   if (!token) {
     return res.status(403).send({
