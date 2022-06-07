@@ -16,7 +16,7 @@ exports.getAllOrganziations = (req, res) => {
 				return res.status(400).json({ err });
 			}
 			const user = result.rows[0];
-			if(user.microsoft_id) {
+			if (user.microsoft_id) {
 				const organizations = await devOpsApi.getAllOrganizations(
 					user.microsoft_id,
 					user.personal_access_token
@@ -24,15 +24,15 @@ exports.getAllOrganziations = (req, res) => {
 				return res.status(200).send(organizations);
 			} else {
 				return res.status(404).send({
-					message: 'Not found! Please input your valid Personal Access Token!'
-				})
+					message: 'Not found! Please input your valid Personal Access Token!',
+				});
 			}
 		});
 	});
 };
 
 exports.getOrganizationProjects = (req, res) => {
-	const organizationName = req.params.name
+	const organizationName = req.params.name;
 	const query = `SELECT * FROM users WHERE id=$1`;
 	const values = [req.user_id];
 	pool.connect((error, client, release) => {
@@ -50,16 +50,16 @@ exports.getOrganizationProjects = (req, res) => {
 				organizationName,
 				user.personal_access_token
 			);
-			if(projects.value) {
+			if (projects.value) {
 				return res.status(200).send(projects);
 			} else {
 				return res.status(404).send({
-					message: 'not found'
-				})
+					message: 'not found',
+				});
 			}
 		});
 	});
-}
+};
 
 exports.addOrganization = (req, res) => {
 	if (req.body.organization_name && !req.body.organization_name.includes(' ')) {

@@ -2,7 +2,7 @@ const axios = require('axios');
 
 const btoa = (string) => {
 	return Buffer.from(string).toString('base64');
-}
+};
 
 const getMicrosoftProfile = (pat) => {
 	return axios
@@ -15,7 +15,6 @@ const getMicrosoftProfile = (pat) => {
 			}
 		)
 		.then((response) => {
-      console.log(response.data)
 			return response.data;
 		})
 		.catch((err) => {
@@ -24,7 +23,7 @@ const getMicrosoftProfile = (pat) => {
 };
 
 const getAllOrganizations = (publicAlias, pat) => {
-  return axios
+	return axios
 		.get(
 			`https://app.vssps.visualstudio.com/_apis/accounts?memberId=${publicAlias}&api-version=6.0`,
 			{
@@ -33,17 +32,30 @@ const getAllOrganizations = (publicAlias, pat) => {
 				},
 			}
 		)
-		.then((response) => {
-			console.log(response.data);
-			return response.data;
+		.then(async (response) => {
+			const organizations = response.data.value;
+			let result = [];
+			for(let i = 0; i < organizations.length; i++) {
+				const projects = await getAllOrganizationProjects(
+					organizations[i].accountName,
+					pat
+				);
+				result.push({
+					accountId: organizations[i].accountId,
+					accountName: organizations[i].accountName,
+					projectsCount: projects.count
+				});
+			}
+			console.log(result)
+			return result;
 		})
 		.catch((err) => {
 			console.log(err);
 		});
-}
+};
 
 const getAllOrganizationProjects = (organization, pat) => {
-  return axios
+	return axios
 		.get(
 			`https://dev.azure.com/${organization}/_apis/projects?api-version=6.0`,
 			{
@@ -53,18 +65,17 @@ const getAllOrganizationProjects = (organization, pat) => {
 			}
 		)
 		.then((response) => {
-			console.log(response.data);
 			return response.data;
 		})
 		.catch((err) => {
 			return err.response;
 		});
-}
+};
 
 const devOpsApi = {
 	getMicrosoftProfile,
-  getAllOrganizations,
-  getAllOrganizationProjects
+	getAllOrganizations,
+	getAllOrganizationProjects,
 };
 
 module.exports = devOpsApi;
