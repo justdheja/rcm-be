@@ -1,5 +1,9 @@
 const axios = require('axios');
 
+const btoa = (string) => {
+	return Buffer.from(string).toString('base64');
+}
+
 const getMicrosoftProfile = (pat) => {
 	return axios
 		.get(
