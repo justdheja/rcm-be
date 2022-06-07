@@ -53,15 +53,19 @@ const createUserTable = () => {
 
 const createMeetingTable = () => {
 	const meetingTable = `CREATE TABLE IF NOT EXISTS
-	meetings(
-		id SERIAL PRIMARY KEY,
-		user_id integer NOT NULL,
-		title VARCHAR (200) NOT NULL,
-		meeting_link text NOT NULL,
-		participants text[],
-		meeting_record text,
-		FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
-	)`;
+		meetings(
+			id SERIAL PRIMARY KEY,
+			user_id integer NOT NULL,
+			project_id integer NOT NULL,
+			title VARCHAR(200) NOT NULL,
+			meeting_link text NOT NULL,
+			participants text[] NOT NULL,
+			meeting_date date NOT NULL,
+			meeting_record text,
+			meeting_mom text,
+			meeting_desc VARCHAR(255),
+			FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+		)`;
 	pool
 		.query(meetingTable)
 		.then((res) => {
@@ -114,16 +118,18 @@ const dropMeetingsTable = () => {
 			console.log(err);
 			pool.end();
 		});
-}
+};
 
 const createAllTable = async () => {
 	createUserTable();
 	createOrganizationsTable();
+	createMeetingTable();
 };
 
 const dropAllTable = () => {
 	dropUserTable();
 	dropCompanyTable();
+	dropMeetingsTable();
 };
 
 pool.on('remove', () => {

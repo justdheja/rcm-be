@@ -12,9 +12,13 @@ module.exports = function (app) {
 		next();
 	});
 
-  app.post(
-		'/api/organization/add',
+	app.get(
+		'/api/organization',
 		[verifyToken],
-		controller.addOrganization
+		controller.getAllOrganziations
 	);
+
+	app.get('/api/organization/:name/projects', [verifyToken], controller.getOrganizationProjects)
+
+	app.post('/api/organization/add', [verifyToken], controller.addOrganization);
 };
