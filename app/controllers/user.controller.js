@@ -35,8 +35,13 @@ exports.addPesonalAccessToken = async (req, res) => {
 	if(req.body.pat) {
 		let msid;
 		await devOpsApi.getMicrosoftProfile(req.body.pat).then((response) => {
-			msid = response.publicAlias
-			console.log(msid)
+			if (response.publicAlias) {
+				msid = response.publicAlias
+			} else {
+				return res.status(404).send({
+					message: 'Please input valid Personal Access Token!'
+				})
+			}
 		})
 		const query = `UPDATE users SET personal_access_token=$1, microsoft_id=$2 WHERE id=$3 returning *`;
 		const values = [req.body.pat, msid, req.user_id];
