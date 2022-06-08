@@ -23,6 +23,7 @@ exports.userBoard = (req, res) => {
 			return res.status(200).send({
 				username: user.username,
 				user_id: user.id,
+				email: user.email,
 				personal_access_token: user.personal_access_token,
 				microsoft_id: user.microsoft_id,
 				message: `User Profile`,
@@ -59,6 +60,7 @@ exports.addPesonalAccessToken = async (req, res) => {
 				return res.status(200).send({
 					username: user.username,
 					user_id: user.id,
+					email: user.email,
 					personal_access_token: user.personal_access_token,
 					microsoft_id: user.microsoft_id,
 					message: `Personal Access Token Updated!`,
