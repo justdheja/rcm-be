@@ -33,19 +33,21 @@ exports.userBoard = (req, res) => {
 };
 
 exports.addPesonalAccessToken = async (req, res) => {
-	if(req.body.pat) {
+	if(req.body.personal_access_token) {
 		let msid;
-		await devOpsApi.getMicrosoftProfile(req.body.pat).then((response) => {
-			if (response.publicAlias) {
-				msid = response.publicAlias
-			} else {
-				return res.status(404).send({
-					message: 'Please input valid Personal Access Token!'
-				})
-			}
-		})
+		await devOpsApi
+			.getMicrosoftProfile(req.body.personal_access_token)
+			.then((response) => {
+				if (response.publicAlias) {
+					msid = response.publicAlias;
+				} else {
+					return res.status(404).send({
+						message: 'Please input valid Personal Access Token!',
+					});
+				}
+			});
 		const query = `UPDATE users SET personal_access_token=$1, microsoft_id=$2 WHERE id=$3 returning *`;
-		const values = [req.body.pat, msid, req.user_id];
+		const values = [req.body.personal_access_token, msid, req.user_id];
 		pool.connect((error, client, release) => {
 			if (error) {
 				return console.error('Error acquiring client', error.stack);
