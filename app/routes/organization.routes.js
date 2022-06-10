@@ -20,5 +20,7 @@ module.exports = function (app) {
 
 	app.get('/api/organization/:name/projects', [verifyToken], controller.getOrganizationProjects)
 
+	app.get('/api/organization/:name/projects/:projectId', [verifyToken], controller.getProjectDetail)
+
 	app.post('/api/organization/add', [verifyToken], controller.addOrganization);
 };

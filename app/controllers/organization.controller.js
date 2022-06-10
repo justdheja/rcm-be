@@ -61,6 +61,38 @@ exports.getOrganizationProjects = (req, res) => {
 	});
 };
 
+exports.getProjectDetail = (req, res) => {
+	const organizationName = req.params.name;
+	const projectId = req.params.projectId;
+	const query = `SELECT * FROM users WHERE id=$1`;
+	const values = [req.user_id];
+	pool.connect((error, client, release) => {
+		if (error) {
+			return console.error('Error acquiring client', error.stack);
+		}
+		client.query(query, values, async (err, result) => {
+			release();
+			if (err) {
+				console.log(err.message);
+				return res.status(400).json({ err });
+			}
+			const user = result.rows[0];
+			const projects = await devOpsApi.getProjectDetail(
+				organizationName,
+				projectId,
+				user.personal_access_token
+			);
+			if (projects.value) {
+				return res.status(200).send(projects);
+			} else {
+				return res.status(404).send({
+					message: 'not found',
+				});
+			}
+		});
+	});
+};
+
 exports.addOrganization = (req, res) => {
 	if (req.body.organization_name && !req.body.organization_name.includes(' ')) {
 		const query = `

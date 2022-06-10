@@ -72,10 +72,29 @@ const getAllOrganizationProjects = (organization, pat) => {
 		});
 };
 
+const getProjectDetail = (organization, projectId, pat) => {
+	return axios
+		.get(
+			`https://dev.azure.com/${organization}/_apis/projects/${projectId}?api-version=6.0`,
+			{
+				headers: {
+					Authorization: 'Basic ' + btoa('Basic' + ':' + pat),
+				},
+			}
+		)
+		.then((response) => {
+			return response.data;
+		})
+		.catch((err) => {
+			return err.response;
+		});
+}
+
 const devOpsApi = {
 	getMicrosoftProfile,
 	getAllOrganizations,
 	getAllOrganizationProjects,
+	getProjectDetail,
 };
 
 module.exports = devOpsApi;
