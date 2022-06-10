@@ -82,7 +82,7 @@ exports.getProjectDetail = (req, res) => {
 				projectId,
 				user.personal_access_token
 			);
-			if (projects.value) {
+			if (projects.id) {
 				return res.status(200).send(projects);
 			} else {
 				return res.status(404).send({
