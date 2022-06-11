@@ -15,4 +15,5 @@ module.exports = (app) => {
 	app.post('/api/meeting', [verifyToken], controller.createMeeting);
 	app.get('/api/meeting/:project_id', [verifyToken], controller.getAllMeetings);
 	app.get('/api/meeting/delete/:meeting_id', [verifyToken], controller.deleteMeeting)
+	app.get('/api/meeting/:meeting_id', [verifyToken],)
 };

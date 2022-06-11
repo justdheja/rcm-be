@@ -84,3 +84,24 @@ exports.deleteMeeting = (req, res) => {
 		});
 	});
 };
+
+exports.getMeetingDetail = (req, res) => {
+	const query = `SELECT * FROM meetings WHERE id=$1 AND user_id=$2`;
+	const values = [req.params.meeting_id ,req.user_id];
+	pool.connect((error, client, release) => {
+		if (error) {
+			return console.error('Error acquiring client', error.stack);
+		}
+		client.query(query, values, (err, result) => {
+			release();
+			if (err) {
+				console.log(err.message);
+				return res.status(400).json({ err });
+			}
+			const meeting = result.rows[0];
+			return res.status(200).send({
+				data: meeting,
+			});
+		});
+	});
+};
