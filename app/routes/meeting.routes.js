@@ -25,4 +25,5 @@ module.exports = (app) => {
 		controller.getMeetingDetail
 	);
 	app.post('/api/meeting/:meeting_id/record', [verifyToken], controller.addRecordLink);
+	app.post('/api/meeting/:meeting_id/mom', [verifyToken], controller.addMom);
 };
