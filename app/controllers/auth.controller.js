@@ -28,7 +28,7 @@ exports.signup = (req, res) => {
 					return res.status(400).json({ err });
 				}
 				const user = result.rows[0];
-				const token = jwt.sign({ id: user.id }, process.env.SECRET, {
+				const token = jwt.sign({ id: user.id, username: user.username }, process.env.SECRET, {
 					expiresIn: ONEDAY,
 				});
 				return res.status(200).send({
@@ -80,9 +80,13 @@ exports.signin = (req, res) => {
 					message: 'Invalid password!',
 				});
 			}
-			const token = jwt.sign({ id: user.id }, process.env.SECRET, {
-				expiresIn: ONEDAY,
-			});
+			const token = jwt.sign(
+				{ id: user.id, username: user.username },
+				process.env.SECRET,
+				{
+					expiresIn: ONEDAY,
+				}
+			);
 			res.status(200).send({
 				id: user.id,
 				username: user.username,

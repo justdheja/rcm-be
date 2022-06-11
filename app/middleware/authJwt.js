@@ -18,6 +18,7 @@ exports.verifyToken = (req, res, next) => {
       });
     }
     req.user_id = decoded.id;
+    req.username = decoded.username;
     next();
   });
 };
