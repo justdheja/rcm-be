@@ -1,6 +1,7 @@
 require('dotenv').config();
 const { verifyToken } = require('../middleware/authJwt');
 const controller = require('../controllers/organization.controller');
+const workitems = require('../controllers/workitems.controller');
 
 module.exports = function (app) {
 	app.use(function (req, res, next) {
@@ -21,6 +22,8 @@ module.exports = function (app) {
 	app.get('/api/organization/:name/projects', [verifyToken], controller.getOrganizationProjects)
 
 	app.get('/api/organization/:name/projects/:projectId', [verifyToken], controller.getProjectDetail)
+
+	app.get('/api/organization/:name/projects/:projectId/workitems', [verifyToken], workitems.getAllWorkItems)
 
 	app.post('/api/organization/add', [verifyToken], controller.addOrganization);
 };
