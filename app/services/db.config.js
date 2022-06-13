@@ -8,28 +8,6 @@ pool.on('connect', () => {
 	console.log('Connected to the Database');
 });
 
-const createOrganizationsTable = () => {
-	const companyTable = `
-    CREATE TABLE IF NOT EXISTS
-    organizations(
-      id SERIAL PRIMARY KEY,
-      user_id integer NOT NULL,
-      organization_name VARCHAR(120) NOT NULL,
-			FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
-    )
-  `;
-	pool
-		.query(companyTable)
-		.then((res) => {
-			console.log(res);
-			pool.end();
-		})
-		.catch((err) => {
-			console.log(err);
-			pool.end();
-		});
-};
-
 const createUserTable = () => {
 	const userTable = `CREATE TABLE IF NOT EXISTS
     users(
@@ -78,10 +56,27 @@ const createMeetingTable = () => {
 		});
 };
 
-const dropUserTable = () => {
-	const usersDropQuery = 'DROP TABLE IF EXISTS users';
+const createNoteTable = () => {
+	const noteTable = `CREATE TABLE IF NOT EXISTS
+		notes(
+			id SERIAL PRIMARY KEY,
+			meeting_id integer NOT NULL,
+			workitems_id VARCHAR(200) NOT NULL,
+			workitems_state VARCHAR(150) NOT NULL,
+			title text NOT NULL,
+			new_title text NOT NULL,
+			note_detail text NOT NULL,
+			note_priority integer NOT NULL,
+			note_initiator VARCHAR(200) NOT NULL,
+			note_type CHAR(50) NOT NULL,
+			note_acceptance CHAR(50),
+			note_reason text,
+			FOREIGN KEY (meeting_id) REFERENCES meetings (id) ON DELETE CASCADE,
+			CONSTRAINT valid_priority_number 
+			CHECK (note_priority <= 4 AND note_priority >= 0)
+		)`;
 	pool
-		.query(usersDropQuery)
+		.query(noteTable)
 		.then((res) => {
 			console.log(res);
 			pool.end();
@@ -90,12 +85,35 @@ const dropUserTable = () => {
 			console.log(err);
 			pool.end();
 		});
-};
+}
 
-const dropCompanyTable = () => {
-	const query = 'DROP TABLE IF EXISTS organizations';
+const createReportTable = () => {
+	const reportTable = `CREATE TABLE IF NOT EXISTS
+		reports(
+			id SERIAL PRIMARY KEY,
+			report_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+			project_id VARCHAR(200) NOT NULL,
+			meeting_id integer NOT NULL,
+			user_id integer NOT NULL,
+			FOREIGN KEY (meeting_id) REFERENCES meetings (id) ON DELETE CASCADE,
+			FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+		)`;
 	pool
-		.query(query)
+		.query(reportTable)
+		.then((res) => {
+			console.log(res);
+			pool.end();
+		})
+		.catch((err) => {
+			console.log(err);
+			pool.end();
+		});
+}
+
+const dropUserTable = () => {
+	const usersDropQuery = 'DROP TABLE IF EXISTS users';
+	pool
+		.query(usersDropQuery)
 		.then((res) => {
 			console.log(res);
 			pool.end();
@@ -120,16 +138,46 @@ const dropMeetingsTable = () => {
 		});
 };
 
+const dropNoteTable = () => {
+	const query = 'DROP TABLE IF EXISTS notes';
+	pool
+		.query(query)
+		.then((res) => {
+			console.log(res);
+			pool.end();
+		})
+		.catch((err) => {
+			console.log(err);
+			pool.end();
+		});
+};
+
+const dropReportTable = () => {
+	const query = 'DROP TABLE IF EXISTS reports';
+	pool
+		.query(query)
+		.then((res) => {
+			console.log(res);
+			pool.end();
+		})
+		.catch((err) => {
+			console.log(err);
+			pool.end();
+		});
+};
+
 const createAllTable = async () => {
-	createUserTable();
-	createOrganizationsTable();
-	createMeetingTable();
+	// createUserTable();
+	// createMeetingTable();
+	createNoteTable();
+	createReportTable();
 };
 
 const dropAllTable = () => {
-	dropUserTable();
-	dropCompanyTable();
-	dropMeetingsTable();
+	// dropUserTable();
+	// dropMeetingsTable();
+	dropReportTable();
+	dropNoteTable();
 };
 
 pool.on('remove', () => {

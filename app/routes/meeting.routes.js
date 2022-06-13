@@ -13,6 +13,7 @@ module.exports = (app) => {
 	});
 
 	app.post('/api/meeting', [verifyToken], controller.createMeeting);
+	app.post('/api/meeting/note', [verifyToken], controller.createNote);
 	app.get('/api/meeting/:project_id', [verifyToken], controller.getAllMeetings);
 	app.get(
 		'/api/meeting/delete/:meeting_id',

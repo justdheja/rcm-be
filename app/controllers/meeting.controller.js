@@ -149,3 +149,37 @@ exports.addMom = (req, res) => {
 		});
 	});
 }
+
+exports.createNote = (req, res) => {
+	const query = `INSERT INTO notes(meeting_id, workitems_id, workitems_state, title, new_title, note_detail, note_priority, note_initiator, note_type) values($1,$2,$3,$4,$5,$6,$7,$8,$9) returning *`;
+	const values = [
+		req.body.meeting_id,
+		req.body.workitems_id,
+		req.body.workitems_state,
+		req.body.title,
+		req.body.new_title,
+		req.body.note_detail,
+		req.body.note_priority,
+		req.body.note_initiator,
+		req.body.note_type,
+	];
+	pool.connect((error, client, release) => {
+		if (error) {
+			return console.error('Error acquiring client', error.stack);
+		}
+		client.query(query, values, (err, result) => {
+			release();
+			if (err) {
+				console.log(err.message);
+				return res.status(400).json({ err });
+			}
+			const note = result.rows[0];
+			return res.status(200).send({
+				data: note,
+				message: `Note created successfully!`,
+			});
+		});
+	});
+}
+
+
