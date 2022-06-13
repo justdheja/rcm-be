@@ -195,7 +195,7 @@ exports.getAllNotes = (req, res) => {
 				console.log(err.message);
 				return res.status(400).json({ err });
 			}
-			const notes = result.rows[0];
+			const notes = result.rows;
 			return res.status(200).send({
 				data: notes,
 			});
