@@ -14,6 +14,7 @@ module.exports = (app) => {
 
 	app.post('/api/meeting', [verifyToken], controller.createMeeting);
 	app.post('/api/meeting/note', [verifyToken], controller.createNote);
+	app.get('/api/meeting/note/:note_id', [verifyToken], controller.deleteNote);
 	app.get('/api/meeting/:project_id', [verifyToken], controller.getAllMeetings);
 	app.get(
 		'/api/meeting/delete/:meeting_id',
@@ -29,6 +30,11 @@ module.exports = (app) => {
 		'/api/meeting/:meeting_id/record',
 		[verifyToken],
 		controller.addRecordLink
+	);
+	app.get(
+		'/api/meeting/:meeting_id/note',
+		[verifyToken],
+		controller.getAllNotes
 	);
 	app.post('/api/meeting/:meeting_id/mom', [verifyToken], controller.addMom);
 };

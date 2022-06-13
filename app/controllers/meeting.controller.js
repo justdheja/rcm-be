@@ -182,4 +182,45 @@ exports.createNote = (req, res) => {
 	});
 }
 
+exports.getAllNotes = (req, res) => {
+	const query = `SELECT * FROM notes WHERE meeting_id=$1`;
+	const values = [req.params.meeting_id];
+	pool.connect((error, client, release) => {
+		if (error) {
+			return console.error('Error acquiring client', error.stack);
+		}
+		client.query(query, values, (err, result) => {
+			release();
+			if (err) {
+				console.log(err.message);
+				return res.status(400).json({ err });
+			}
+			const notes = result.rows[0];
+			return res.status(200).send({
+				data: notes,
+			});
+		});
+	});
+}
 
+exports.deleteNote = (req, res) => {
+	const query = `DELETE FROM notes WHERE id=$1 RETURNING *`;
+	const values = [req.params.note_id];
+	pool.connect((error, client, release) => {
+		if (error) {
+			return console.error('Error acquiring client', error.stack);
+		}
+		client.query(query, values, (err, result) => {
+			release();
+			if (err) {
+				console.log(err.message);
+				return res.status(400).json({ err });
+			}
+			const notes = result.rows[0];
+			return res.status(200).send({
+				data: notes,
+				message: 'Note has been deleted!'
+			});
+		});
+	});
+}
