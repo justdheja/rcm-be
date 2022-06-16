@@ -40,7 +40,7 @@ module.exports = (app) => {
 		[verifyToken],
 		controller.getAllNotes
 	);
-	app.get(
+	app.post(
 		'/api/meeting/note/approve',
 		[verifyToken],
 		controller.approveNote
