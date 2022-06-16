@@ -14,7 +14,11 @@ module.exports = (app) => {
 
 	app.post('/api/meeting', [verifyToken], controller.createMeeting);
 	app.post('/api/meeting/note', [verifyToken], controller.createNote);
-	app.get('/api/meeting/note/:note_id/delete', [verifyToken], controller.deleteNote);
+	app.get(
+		'/api/meeting/note/:note_id/delete',
+		[verifyToken],
+		controller.deleteNote
+	);
 	app.get('/api/meeting/:project_id', [verifyToken], controller.getAllMeetings);
 	app.get(
 		'/api/meeting/delete/:meeting_id',
@@ -37,4 +41,12 @@ module.exports = (app) => {
 		controller.getAllNotes
 	);
 	app.post('/api/meeting/:meeting_id/mom', [verifyToken], controller.addMom);
+	app.post('/api/meeting/report', [verifyToken], controller.createReport);
+	app.get(
+		'/api/meeting/report/:report_id/delete',
+		[verifyToken],
+		controller.deleteReport
+	);
+	app.get('/api/meeting/report', controller.getReport)
+	app.get('/api/meeting/reportbyproject', [verifyToken], controller.getReportByProject)
 };

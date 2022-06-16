@@ -65,7 +65,7 @@ exports.getAllMeetings = (req, res) => {
 
 exports.deleteMeeting = (req, res) => {
 	const query = `DELETE FROM meetings WHERE id=$1 AND user_id=$2 RETURNING *`;
-	const values = [req.params.meeting_id ,req.user_id];
+	const values = [req.params.meeting_id, req.user_id];
 	pool.connect((error, client, release) => {
 		if (error) {
 			return console.error('Error acquiring client', error.stack);
@@ -87,7 +87,7 @@ exports.deleteMeeting = (req, res) => {
 
 exports.getMeetingDetail = (req, res) => {
 	const query = `SELECT * FROM meetings WHERE id=$1 AND user_id=$2`;
-	const values = [req.params.meeting_id ,req.user_id];
+	const values = [req.params.meeting_id, req.user_id];
 	pool.connect((error, client, release) => {
 		if (error) {
 			return console.error('Error acquiring client', error.stack);
@@ -126,7 +126,7 @@ exports.addRecordLink = (req, res) => {
 			});
 		});
 	});
-}
+};
 
 exports.addMom = (req, res) => {
 	const query = `UPDATE meetings SET meeting_mom=$1 WHERE id=$2 AND user_id=$3 returning *`;
@@ -148,7 +148,7 @@ exports.addMom = (req, res) => {
 			});
 		});
 	});
-}
+};
 
 exports.createNote = (req, res) => {
 	const query = `INSERT INTO notes(meeting_id, workitems_id, workitems_state, title, new_title, note_detail, note_priority, note_initiator, note_type) values($1,$2,$3,$4,$5,$6,$7,$8,$9) returning *`;
@@ -180,7 +180,7 @@ exports.createNote = (req, res) => {
 			});
 		});
 	});
-}
+};
 
 exports.getAllNotes = (req, res) => {
 	const query = `SELECT * FROM notes WHERE meeting_id=$1`;
@@ -201,7 +201,7 @@ exports.getAllNotes = (req, res) => {
 			});
 		});
 	});
-}
+};
 
 exports.deleteNote = (req, res) => {
 	const query = `DELETE FROM notes WHERE id=$1 RETURNING *`;
@@ -219,8 +219,113 @@ exports.deleteNote = (req, res) => {
 			const notes = result.rows[0];
 			return res.status(200).send({
 				data: notes,
-				message: 'Note has been deleted!'
+				message: 'Note has been deleted!',
 			});
 		});
 	});
-}
+};
+
+exports.createReport = (req, res) => {
+	const query = `INSERT INTO reports(user_id, project_id, meeting_id, project_name, organization) values($1,$2,$3,$4,$5) returning *`;
+	const values = [
+		req.user_id,
+		req.body.project_id,
+		req.body.meeting_id,
+		req.body.project_name,
+		req.body.organization,
+	];
+	pool.connect((error, client, release) => {
+		if (error) {
+			return console.error('Error acquiring client', error.stack);
+		}
+		client.query(query, values, (err, result) => {
+			release();
+			if (err) {
+				console.log(err.message);
+				return res.status(400).json({ err });
+			}
+			const report = result.rows[0];
+			return res.status(200).send({
+				data: report,
+				message: `Report created successfully!`,
+			});
+		});
+	});
+};
+
+exports.getReport = (req, res) => {
+	const query = `SELECT * FROM reports 
+	INNER JOIN meetings ON reports.meeting_id=meetings.id
+	INNER JOIN users ON reports.user_id=users.id
+	INNER JOIN notes ON reports.meeting_id=notes.meeting_id`;
+	const values = [req.body.report_id, req.body.project_id, req.body.meeting_id];
+	pool.connect((error, client, release) => {
+		if (error) {
+			return console.error('Error acquiring client', error.stack);
+		}
+		client.query(query, values, (err, result) => {
+			release();
+			if (err) {
+				console.log(err.message);
+				return res.status(400).json({ err });
+			}
+			const reports = result.rows;
+			return res.status(200).send({
+				data: reports,
+			});
+		});
+	});
+};
+
+exports.getReportByProject = (req, res) => {
+	const query = `SELECT * FROM reports 
+	INNER JOIN meetings ON reports.meeting_id=meetings.id
+	INNER JOIN users ON reports.user_id=users.id
+	INNER JOIN notes ON reports.meeting_id=notes.meeting_id
+	WHERE reports.project_id=$1`;
+	const values = [req.body.project_id];
+	pool.connect((error, client, release) => {
+		if (error) {
+			return console.error('Error acquiring client', error.stack);
+		}
+		client.query(query, values, (err, result) => {
+			release();
+			if (err) {
+				console.log(err.message);
+				return res.status(400).json({ err });
+			}
+			const reports = result.rows;
+			return res.status(200).send({
+				data: reports,
+			});
+		});
+	});
+};
+
+exports.deleteReport = (req, res) => {
+	const query = `DELETE FROM reports WHERE id=$1 RETURNING *`;
+	const values = [req.params.report_id];
+	pool.connect((error, client, release) => {
+		if (error) {
+			return console.error('Error acquiring client', error.stack);
+		}
+		client.query(query, values, (err, result) => {
+			release();
+			if (err) {
+				console.log(err.message);
+				return res.status(400).json({ err });
+			}
+			const report = result.rows[0];
+			if (report) {
+				return res.status(200).send({
+					data: report,
+					message: 'Report has been deleted!',
+				});
+			} else {
+				return res.status(404).send({
+					message: 'Report not found',
+				});
+			}
+		});
+	});
+};

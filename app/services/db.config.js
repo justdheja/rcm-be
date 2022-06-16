@@ -93,6 +93,8 @@ const createReportTable = () => {
 			id SERIAL PRIMARY KEY,
 			report_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 			project_id VARCHAR(200) NOT NULL,
+			project_name text NOT NULL,
+			organization text NOT NULL,
 			meeting_id integer NOT NULL,
 			user_id integer NOT NULL,
 			FOREIGN KEY (meeting_id) REFERENCES meetings (id) ON DELETE CASCADE,
@@ -167,15 +169,15 @@ const dropReportTable = () => {
 };
 
 const createAllTable = async () => {
-	// createUserTable();
-	// createMeetingTable();
+	createUserTable();
+	createMeetingTable();
 	createNoteTable();
 	createReportTable();
 };
 
 const dropAllTable = () => {
-	// dropUserTable();
-	// dropMeetingsTable();
+	dropUserTable();
+	dropMeetingsTable();
 	dropReportTable();
 	dropNoteTable();
 };
