@@ -203,6 +203,32 @@ exports.getAllNotes = (req, res) => {
 	});
 };
 
+exports.approveNote = (req, res) => {
+	const query = `UPDATE notes SET note_acceptance=$1, note_reason=$2 WHERE id=$3 returning *`;
+	const values = [
+		req.body.note_acceptance,
+		req.body.note_reason,
+		req.body.id,
+	];
+	pool.connect((error, client, release) => {
+		if (error) {
+			return console.error('Error acquiring client', error.stack);
+		}
+		client.query(query, values, (err, result) => {
+			release();
+			if (err) {
+				console.log(err.message);
+				return res.status(400).json({ err });
+			}
+			const notes = result.rows[0];
+			return res.status(200).send({
+				data: notes,
+				message: `Note successfully updated!`,
+			});
+		});
+	});
+}
+
 exports.deleteNote = (req, res) => {
 	const query = `DELETE FROM notes WHERE id=$1 RETURNING *`;
 	const values = [req.params.note_id];
