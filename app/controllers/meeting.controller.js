@@ -283,7 +283,7 @@ exports.getReportByProject = (req, res) => {
 	INNER JOIN users ON reports.user_id=users.id
 	INNER JOIN notes ON reports.meeting_id=notes.meeting_id
 	WHERE reports.project_id=$1`;
-	const values = [req.body.project_id];
+	const values = [req.params.project_id];
 	pool.connect((error, client, release) => {
 		if (error) {
 			return console.error('Error acquiring client', error.stack);
