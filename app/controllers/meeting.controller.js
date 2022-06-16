@@ -278,7 +278,7 @@ exports.getReport = (req, res) => {
 };
 
 exports.getReportByProject = (req, res) => {
-	const query = `SELECT * FROM reports 
+	const query = `SELECT reports.id, report_date, reports.project_id, project_name, organization, reports.meeting_id, reports.user_id, meetings.title AS meeting_title, notes.title, notes.new_title, notes.workitems_id, notes.workitems_state, notes.note_type FROM reports 
 	INNER JOIN meetings ON reports.meeting_id=meetings.id
 	INNER JOIN users ON reports.user_id=users.id
 	INNER JOIN notes ON reports.meeting_id=notes.meeting_id
