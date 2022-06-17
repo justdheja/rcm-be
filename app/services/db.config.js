@@ -95,7 +95,7 @@ const createReportTable = () => {
 			project_id VARCHAR(200) NOT NULL,
 			project_name text NOT NULL,
 			organization text NOT NULL,
-			meeting_id integer NOT NULL,
+			meeting_id integer UNIQUE NOT NULL,
 			user_id integer NOT NULL,
 			FOREIGN KEY (meeting_id) REFERENCES meetings (id) ON DELETE CASCADE,
 			FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE

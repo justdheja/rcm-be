@@ -248,7 +248,9 @@ exports.deleteNote = (req, res) => {
 };
 
 exports.createReport = (req, res) => {
-	const query = `INSERT INTO reports(user_id, project_id, meeting_id, project_name, organization) values($1,$2,$3,$4,$5) returning *`;
+	const query = `INSERT INTO reports(user_id, project_id, meeting_id, project_name, organization) values($1,$2,$3,$4,$5) returning *
+	ON CONFLICT (meeting_id)
+	DO UPDATE SET report_date=CURRENT_TIMESTAMP`;
 	const values = [
 		req.user_id,
 		req.body.project_id,
