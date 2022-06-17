@@ -304,12 +304,10 @@ exports.getReport = (req, res) => {
 };
 
 exports.getReportByProject = (req, res) => {
-	const query = `SELECT reports.id, report_date, reports.project_id, project_name, organization, reports.meeting_id, reports.user_id, meetings.title AS meeting_title, notes.title, notes.new_title, notes.workitems_id, notes.workitems_state, notes.note_type FROM reports 
-	INNER JOIN meetings ON reports.meeting_id=meetings.id
-	INNER JOIN users ON reports.user_id=users.id
-	INNER JOIN notes ON reports.meeting_id=notes.meeting_id
-	WHERE reports.project_id=$1`;
-	const values = [req.params.project_id];
+	const query = `SELECT *, meetings.title AS meeting_title FROM meetings
+INNER JOIN notes ON meetings.id=notes.meeting_id
+WHERE user_id=$1 AND project_id=$2 AND notes.note_acceptance='Approved'`;
+	const values = [req.user_id, req.params.project_id];
 	pool.connect((error, client, release) => {
 		if (error) {
 			return console.error('Error acquiring client', error.stack);

@@ -69,7 +69,7 @@ const createNoteTable = () => {
 			note_priority integer NOT NULL,
 			note_initiator VARCHAR(200) NOT NULL,
 			note_type CHAR(50) NOT NULL,
-			note_acceptance CHAR(50),
+			note_acceptance VARCHAR(20),
 			note_reason text,
 			FOREIGN KEY (meeting_id) REFERENCES meetings (id) ON DELETE CASCADE,
 			CONSTRAINT valid_priority_number 
