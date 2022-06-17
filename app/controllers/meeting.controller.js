@@ -205,11 +205,7 @@ exports.getAllNotes = (req, res) => {
 
 exports.approveNote = (req, res) => {
 	const query = `UPDATE notes SET note_acceptance=$1, note_reason=$2 WHERE id=$3 returning *`;
-	const values = [
-		req.body.note_acceptance,
-		req.body.note_reason,
-		req.body.id,
-	];
+	const values = [req.body.note_acceptance, req.body.note_reason, req.body.id];
 	pool.connect((error, client, release) => {
 		if (error) {
 			return console.error('Error acquiring client', error.stack);
@@ -227,7 +223,7 @@ exports.approveNote = (req, res) => {
 			});
 		});
 	});
-}
+};
 
 exports.deleteNote = (req, res) => {
 	const query = `DELETE FROM notes WHERE id=$1 RETURNING *`;
@@ -304,7 +300,7 @@ exports.getReport = (req, res) => {
 };
 
 exports.getReportByProject = (req, res) => {
-	const query = `SELECT *, meetings.title AS meeting_title FROM meetings
+	const query = `SELECT *, meetings.title AS meeting_title, notes.id AS note_id FROM meetings
 INNER JOIN notes ON meetings.id=notes.meeting_id
 WHERE user_id=$1 AND project_id=$2 AND notes.note_acceptance='Approved'`;
 	const values = [req.user_id, req.params.project_id];
