@@ -7,7 +7,7 @@
 		"setup": "node ./app/services/db.config createAllTable",
 		"reset-db": "node ./app/services/db.config dropAllTable",
 		"dev": "nodemon server.js",
-		"start": "node server.js",
+		"start": "npm run setup && node server.js",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"author": "justdheja",
