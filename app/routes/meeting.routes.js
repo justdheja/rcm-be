@@ -52,6 +52,6 @@ module.exports = (app) => {
 		[verifyToken],
 		controller.deleteReport
 	);
-	app.get('/api/meeting/report', controller.getReport)
+	app.get('/api/meeting/:meeting_id/report/:project_id', controller.getReport)
 	app.get('/api/meeting/reportbyproject/:project_id', [verifyToken], controller.getReportByProject)
 };
