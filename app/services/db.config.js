@@ -15,7 +15,8 @@ const createUserTable = () => {
       username VARCHAR(120) NOT NULL,
       email VARCHAR(120) NOT NULL,
       password VARCHAR(120) NOT NULL,
-			personal_access_token VARCHAR(200)
+			personal_access_token VARCHAR(200),
+			microsoft_id VARCHAR(255),
     )`;
 	pool
 		.query(userTable)
@@ -62,7 +63,6 @@ const createNoteTable = () => {
 			id SERIAL PRIMARY KEY,
 			meeting_id integer NOT NULL,
 			workitems_id VARCHAR(200) NOT NULL,
-			workitems_state VARCHAR(150) NOT NULL,
 			title text NOT NULL,
 			new_title text NOT NULL,
 			note_detail text NOT NULL,
