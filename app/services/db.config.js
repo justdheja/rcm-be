@@ -16,7 +16,7 @@ const createUserTable = () => {
       email VARCHAR(120) NOT NULL,
       password VARCHAR(120) NOT NULL,
 			personal_access_token VARCHAR(200),
-			microsoft_id VARCHAR(255),
+			microsoft_id VARCHAR(255)
     )`;
 	pool
 		.query(userTable)
@@ -170,8 +170,8 @@ const dropReportTable = () => {
 
 const createAllTable = async () => {
 	createUserTable();
-	createMeetingTable();
 	createNoteTable();
+	createMeetingTable();
 	createReportTable();
 };
 

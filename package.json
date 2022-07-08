@@ -7,7 +7,8 @@
 		"setup": "node ./app/services/db.config createAllTable",
 		"reset-db": "node ./app/services/db.config dropAllTable",
 		"dev": "nodemon server.js",
-		"start": "npm run setup && node server.js",
+		"start-server": "node server.js",
+		"start": "node server.js",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"author": "justdheja",
@@ -27,7 +28,8 @@
 	},
 	"devDependencies": {
 		"dotenv": "^10.0.0",
-		"nodemon": "^2.0.7"
+		"nodemon": "^2.0.7",
+		"npm-run-all": "^4.1.5"
 	},
 	"engines": {
 		"node": "^14.x"
